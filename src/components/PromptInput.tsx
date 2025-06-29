@@ -1,11 +1,10 @@
 'use client';
 import { useState, useRef, useEffect } from "react";
-import { LoaderCircle } from "lucide-react";
-
+import { ClipLoader } from "react-spinners"; // Changed from lucide-react
 
 interface PromptInputProps {
   onSubmit: (prompt: string) => void;
-  onCancel: () => void; // Add onCancel to the props
+  onCancel: () => void;
   isLoading: boolean;
 }
 
@@ -21,7 +20,7 @@ export default function PromptInput({ onSubmit, onCancel, isLoading }: PromptInp
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
   }, [prompt]);
-  
+
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (prompt.trim()) {
@@ -41,9 +40,8 @@ export default function PromptInput({ onSubmit, onCancel, isLoading }: PromptInp
     <form onSubmit={handleFormSubmit} className="max-w-xl w-full mt-8">
       <div className="relative w-full">
         {/* Visually hidden label for accessibility */}
-        <label htmlFor="prompt-textarea" className="sr-only">
-          Enter your prompt
-        </label>
+        <div key="overview" className="max-w-3xl mx-auto md:mt-20 px-8 size-full flex flex-col justify-center">
+    </div>
         <textarea
           id="prompt-textarea"
           ref={textareaRef}
@@ -57,13 +55,13 @@ export default function PromptInput({ onSubmit, onCancel, isLoading }: PromptInp
         />
         <div className="absolute top-1/2 right-3 -translate-y-1/2 flex items-center space-x-2">
           {isLoading ? (
-            <>              
+            <>
               {/* Stop Button */}
               <button
                 type="button"
                 onClick={onCancel}
                 className="
-                  flex items-center justify-center
+                  flex items-center justify-center gap-2
                   w-auto h-10 px-4 py-2
                   text-sm font-semibold text-white bg-blue-600
                   rounded-lg
@@ -72,7 +70,8 @@ export default function PromptInput({ onSubmit, onCancel, isLoading }: PromptInp
                 "
                 aria-label="Stop generating"
               >
-                <LoaderCircle className="w-5 h-5 animate-spin" />
+                {/* Replaced LoaderCircle with ClipLoader */}
+                <ClipLoader color={"#ffffff"} size={20} />
                 Stop
               </button>
             </>
@@ -92,7 +91,7 @@ export default function PromptInput({ onSubmit, onCancel, isLoading }: PromptInp
               "
               aria-label="Run prompt"
             >
-              {"Run ↵"}
+              {"Run Ctrl ↵"}
             </button>
           )}
         </div>

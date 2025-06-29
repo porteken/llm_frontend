@@ -2,9 +2,10 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState, useRef, useEffect } from "react";
-import { Toaster, toast } from "react-hot-toast";
+import { Toaster, toast } from "sonner"; // Changed import
 import PromptInput from "../components/PromptInput";
 import ResponseDisplay from "../components/ResponseDisplay";
+import { motion } from 'framer-motion';
 
 interface LlmResult {
   answer: string;
@@ -87,12 +88,27 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="flex flex-1 w-full flex-col items-center justify-center text-center px-4 mt-12 sm:mt-20">
-        <h1 className="sm:text-6xl text-4xl max-w-[708px] font-bold text-slate-900">
-          Ask anything.
-        </h1>
-        <p className="text-slate-500 font-medium mt-4">
-          Code will return answer from LLM generated python code or normal LLM
-        </p>
+        {/* Sonner's Toaster can be placed at the top level */}
+        <Toaster position="top-center" richColors />
+
+        <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        transition={{ delay: 0.5 }}
+        className="text-2xl font-semibold"
+      >
+        Ask me anything
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        transition={{ delay: 0.6 }}
+        className="text-2xl text-zinc-500"
+      >
+        Code will return answer from LLM generated python code or normal LLM
+      </motion.div>
 
         <PromptInput 
           onSubmit={handleSubmit} 
@@ -100,9 +116,6 @@ const Home: NextPage = () => {
           isLoading={isLoading} 
         />
         
-        <Toaster position="top-center" reverseOrder={false} />
-        
-
         <div ref={answerRef} className="space-y-10 w-full max-w-4xl">
           {result && (
             <ResponseDisplay
