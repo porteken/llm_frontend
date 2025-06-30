@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useState, useRef, useEffect } from "react";
 import { ClipLoader } from "react-spinners"; // Changed from lucide-react
 
@@ -8,8 +8,11 @@ interface PromptInputProps {
   isLoading: boolean;
 }
 
-
-export default function PromptInput({ onSubmit, onCancel, isLoading }: PromptInputProps) {
+export default function PromptInput({
+  onSubmit,
+  onCancel,
+  isLoading,
+}: PromptInputProps) {
   const [prompt, setPrompt] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -40,8 +43,10 @@ export default function PromptInput({ onSubmit, onCancel, isLoading }: PromptInp
     <form onSubmit={handleFormSubmit} className="max-w-xl w-full mt-8">
       <div className="relative w-full">
         {/* Visually hidden label for accessibility */}
-        <div key="overview" className="max-w-3xl mx-auto md:mt-20 px-8 size-full flex flex-col justify-center">
-    </div>
+        <div
+          key="overview"
+          className="max-w-3xl mx-auto md:mt-20 px-8 size-full flex flex-col justify-center"
+        ></div>
         <textarea
           id="prompt-textarea"
           ref={textareaRef}

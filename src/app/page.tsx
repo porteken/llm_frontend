@@ -1,22 +1,21 @@
-'use client'
+"use client";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState, useRef, useEffect } from "react";
 import { Toaster, toast } from "sonner"; // Changed import
 import PromptInput from "../components/PromptInput";
 import ResponseDisplay from "../components/ResponseDisplay";
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
-interface LlmResult {
+interface ResponseType {
   answer: string;
-  method: string;
+  code?: string;
 }
-
 const Home: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<LlmResult | null>(null);
+  const [result, setResult] = useState<ResponseType | null>(null);
   const answerRef = useRef<HTMLDivElement>(null);
-  
+
   // Ref to hold the AbortController for the current fetch request
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -31,7 +30,7 @@ const Home: NextPage = () => {
 
     setIsLoading(true);
     setResult(null);
-    
+
     // Create a new AbortController for this request
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
@@ -46,16 +45,17 @@ const Home: NextPage = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.detail || `Request failed: ${response.status}`);
+        throw new Error(
+          errorData.detail || `Request failed: ${response.status}`,
+        );
       }
 
-      const data: LlmResult = await response.json();
+      const data: ResponseType = await response.json();
       setResult(data);
-
     } catch (error: any) {
       // Check if the error was due to the request being aborted
-      if (error.name === 'AbortError') {
-        console.log('Fetch request was cancelled by the user.');
+      if (error.name === "AbortError") {
+        console.log("Fetch request was cancelled by the user.");
         toast.success("Request cancelled.");
       } else {
         console.error("Failed to generate response:", error);
@@ -92,38 +92,32 @@ const Home: NextPage = () => {
         <Toaster position="top-center" richColors />
 
         <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 10 }}
-        transition={{ delay: 0.5 }}
-        className="text-2xl font-semibold"
-      >
-        Ask me anything
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 10 }}
-        transition={{ delay: 0.6 }}
-        className="text-2xl text-zinc-500"
-      >
-        Code will return answer from LLM generated python code or normal LLM
-      </motion.div>
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          transition={{ delay: 0.5 }}
+          className="text-2xl font-semibold"
+        >
+          Ask me anything
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          transition={{ delay: 0.6 }}
+          className="text-2xl text-zinc-500"
+        >
+          Code will return answer from LLM generated python code or normal LLM
+        </motion.div>
 
-        <PromptInput 
-          onSubmit={handleSubmit} 
-          onCancel={handleCancel} 
-          isLoading={isLoading} 
+        <PromptInput
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+          isLoading={isLoading}
         />
-        
+
         <div ref={answerRef} className="space-y-10 w-full max-w-4xl">
-          {result && (
-            <ResponseDisplay
-              answer={result.answer}
-              method={result.method}
-              onReset={resetChat}
-            />
-          )}
+          {result && <ResponseDisplay result={result} onReset={resetChat} />}
         </div>
       </main>
     </div>
