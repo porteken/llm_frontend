@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { ClipLoader } from "react-spinners"; // Changed from lucide-react
+import { ClipLoader } from "react-spinners";
 
 interface PromptInputProps {
   onSubmit: (prompt: string) => void;
@@ -16,7 +16,6 @@ export default function PromptInput({
   const [prompt, setPrompt] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Auto-resize textarea height
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -28,21 +27,20 @@ export default function PromptInput({
     e.preventDefault();
     if (prompt.trim()) {
       onSubmit(prompt);
-      setPrompt(""); // Clear prompt after submitting
+      setPrompt("");
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
-      handleFormSubmit(e as any); // Can cast because it behaves like a form submit
+      handleFormSubmit(e as any);
     }
   };
 
   return (
     <form onSubmit={handleFormSubmit} className="max-w-xl w-full mt-8">
       <div className="relative w-full">
-        {/* Visually hidden label for accessibility */}
         <div
           key="overview"
           className="max-w-3xl mx-auto md:mt-20 px-8 size-full flex flex-col justify-center"
@@ -61,7 +59,6 @@ export default function PromptInput({
         <div className="absolute top-1/2 right-3 -translate-y-1/2 flex items-center space-x-2">
           {isLoading ? (
             <>
-              {/* Stop Button */}
               <button
                 type="button"
                 onClick={onCancel}
@@ -75,13 +72,11 @@ export default function PromptInput({
                 "
                 aria-label="Stop generating"
               >
-                {/* Replaced LoaderCircle with ClipLoader */}
                 <ClipLoader color={"#ffffff"} size={20} />
                 Stop
               </button>
             </>
           ) : (
-            /* Submit Button (only shows when not loading) */
             <button
               type="submit"
               disabled={!prompt.trim()}

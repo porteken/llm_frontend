@@ -2,7 +2,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useState, useRef, useEffect } from "react";
-import { Toaster, toast } from "sonner"; // Changed import
+import { Toaster, toast } from "sonner";
 import PromptInput from "../components/PromptInput";
 import ResponseDisplay from "../components/ResponseDisplay";
 import { motion } from "framer-motion";
@@ -16,7 +16,6 @@ const Home: NextPage = () => {
   const [result, setResult] = useState<ResponseType | null>(null);
   const answerRef = useRef<HTMLDivElement>(null);
 
-  // Ref to hold the AbortController for the current fetch request
   const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -31,7 +30,6 @@ const Home: NextPage = () => {
     setIsLoading(true);
     setResult(null);
 
-    // Create a new AbortController for this request
     abortControllerRef.current = new AbortController();
     const signal = abortControllerRef.current.signal;
 
@@ -40,7 +38,7 @@ const Home: NextPage = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),
-        signal, // Pass the signal to the fetch request
+        signal,
       });
 
       if (!response.ok) {
@@ -53,7 +51,6 @@ const Home: NextPage = () => {
       const data: ResponseType = await response.json();
       setResult(data);
     } catch (error: any) {
-      // Check if the error was due to the request being aborted
       if (error.name === "AbortError") {
         console.log("Fetch request was cancelled by the user.");
         toast.success("Request cancelled.");
@@ -63,12 +60,10 @@ const Home: NextPage = () => {
       }
     } finally {
       setIsLoading(false);
-      // Clean up the controller
       abortControllerRef.current = null;
     }
   };
 
-  // New function to handle the cancellation
   const handleCancel = () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -88,7 +83,6 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="flex flex-1 w-full flex-col items-center justify-center text-center px-4 mt-12 sm:mt-20">
-        {/* Sonner's Toaster can be placed at the top level */}
         <Toaster position="top-center" richColors />
 
         <motion.div
